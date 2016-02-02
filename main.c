@@ -1,14 +1,16 @@
-#include<unistd.h>
-#include<stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include"utility.h"
 
-int work_on(int x){return 0;}
+extern char *dirname;
+extern char *user;
+extern char *hostname;
+extern char *termstr;
+
 
 int main(int argc, char **argv){
+
     char *name;
     int scriptfd;
+
     if(argv[0][0]=='.' && argv[0][1]=='/')
         name = argv[0]+2;
     else
@@ -23,10 +25,24 @@ int main(int argc, char **argv){
             perror("Error");
             return -1;
         }
+        file_mode = 1;
     }
-    else
+    else {
         scriptfd = STDIN_FILENO;
-    work_on(scriptfd);
+        file_mode = 0;
+    }
+
+
+    dirname = (char*) malloc(PATH_MAX);
+    user=getenv("USER");
+    termstr = (char*) malloc(PATH_MAX+80);
+    strcat(termstr,user);
+    strcat(termstr,"@");
+    strcat(termstr,":");
+
+    work_on_fd(scriptfd);
+
+    close(scriptfd);
 
     return 0;
 }

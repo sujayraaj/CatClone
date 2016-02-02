@@ -1,10 +1,13 @@
 all: cb
 
-cb: main.o
-	gcc main.o -o cb
+cb: utility.o main.o
+	gcc utility.o main.o -o cb
+
+utility.o:
+	gcc -c utility.c -o utility.o
 
 main.o:
 	gcc -c main.c -o main.o
 
 clean:
-	rm main.o cb
+	rm  *.o cb
